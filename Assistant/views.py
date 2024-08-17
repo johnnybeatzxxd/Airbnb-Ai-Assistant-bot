@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from . import database
 from . import ai
 import telebot
-import openai
 import datetime
 import os
 import time
