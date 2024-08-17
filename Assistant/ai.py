@@ -39,7 +39,7 @@ function_descriptions = [
                         },
 
                 },
-                "required": [],
+                "required": ["name","email"],
             }
             },
         {
@@ -54,7 +54,7 @@ function_descriptions = [
                     }
 
                 },
-                "required": ["question didnt relate"],
+                "required": ["off_topic"],
             }
             },
             
@@ -87,7 +87,7 @@ function_descriptions = [
                     },               
 
                 },
-                "required": ['information needed']
+                "required": ['information_needed']
             }
             },
             {
@@ -103,7 +103,7 @@ function_descriptions = [
                     
 
                 },
-                "required": ['amenity']
+                "required": ['aminities']
             }
             }      
 ] 
