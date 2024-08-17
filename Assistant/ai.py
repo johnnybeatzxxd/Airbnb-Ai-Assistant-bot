@@ -240,18 +240,38 @@ class llm:
     def generate_response(self,_id,messages,required_user_info,):
     
         data = {
-                "contents": messages,
+                "contents": [
+                    {"role": "user",
+                    "parts":[{"text": "hello my name is yohans and my email is yohans@gmail.com"}]}],
                 "system_instruction": {
                       "parts": [
                         {
-                          "text": self.instruction
+                          "text": "You are a helpful assistant"
                         }, 
                       ],
                       "role": "system" 
                     },
                 "tools": [{
-                    "functionDeclarations": self.function_descriptions
+                    "functionDeclarations": function_descriptions
                     }],
+                "safetySettings": [
+            {
+                "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                "threshold": "BLOCK_ONLY_HIGH"
+            },
+            {
+                "category": "HARM_CATEGORY_HARASSMENT",
+                "threshold": "BLOCK_ONLY_HIGH"
+            },
+            {
+                "category": "HARM_CATEGORY_HATE_SPEECH",
+                "threshold": "BLOCK_ONLY_HIGH"
+            },
+            {
+                "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                "threshold": "BLOCK_ONLY_HIGH"
+            },
+        ],
                 "generationConfig": {
                 "temperature": 0.1,
                 "topK": 1,
@@ -260,6 +280,7 @@ class llm:
                 "stopSequences": [],
                 #'safety_settings': [{"category":"HARM_CATEGORY_DEROGATORY","threshold":4},{"category":"HARM_CATEGORY_TOXICITY","threshold":4},{"category":"HARM_CATEGORY_VIOLENCE","threshold":4},{"category":"HARM_CATEGORY_SEXUAL","threshold":4},{"category":"HARM_CATEGORY_MEDICAL","threshold":4},{"category":"HARM_CATEGORY_DANGEROUS","threshold":4}]
               },}
+
 
         print("generating answer ... ")
         while True:
