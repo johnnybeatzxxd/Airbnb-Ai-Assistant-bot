@@ -240,9 +240,7 @@ class llm:
     def generate_response(self,_id,messages,required_user_info,):
     
         data = {
-                "contents": [
-                    {"role": "user",
-                    "parts":[{"text": "hello my name is yohans and my email is yohans@gmail.com"}]}],
+                "contents": messages,
                 "system_instruction": {
                       "parts": [
                         {
