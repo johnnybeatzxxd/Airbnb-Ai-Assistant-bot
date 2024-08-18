@@ -244,7 +244,7 @@ class llm:
                 "system_instruction": {
                       "parts": [
                         {
-                          "text": "You are a helpful assistant"
+                          "text": self.instruction
                         }, 
                       ],
                       "role": "system" 
