@@ -1,0 +1,8 @@
+
+# what ever file that ends with .pyc 
+*.pyc
+# ignore file named test
+
+test.*
+.env
+

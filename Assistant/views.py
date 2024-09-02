@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from . import database
 from . import ai
+from .createPropInfo.setup import *
 import telebot
 import datetime
 import os
@@ -53,10 +54,11 @@ class TelegramWebhookView(View):
     
     @bot.message_handler(content_types=['text', 'photo'])
     def chat(customer):
-        
-       
-
+    
         if customer.content_type == "photo":
+            current_property = database.get_current_property(id_)
+            if current_property == None:
+                return None
             caption = customer.caption
             print(caption)
             bot.send_chat_action(customer.chat.id, 'typing')
@@ -95,9 +97,15 @@ class TelegramWebhookView(View):
             database.register(id_,first_name,username)
             # check if user has current property
             current_property = database.get_current_property(id_)
-            if current_property == None:
-                bot.send_message(id_, "please provide which property you looking for!\n aribnb link / room", reply_markup=markups(), parse_mode='HTML')
-                return None
+            if current_property is None:
+                room_id = get_room_id(customer.text)
+                if room_id is None:
+                    bot.send_message(id_, "please provide which property you looking for!\naribnb link / room id.", reply_markup=markups(), parse_mode='HTML')
+                    return None
+                else:
+                    # generate needed information using the given room id
+                    if generate_property_data(room_id):
+                        database.set_current_property(id_,room_id)
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
             llm = ai.llm()
