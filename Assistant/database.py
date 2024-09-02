@@ -7,8 +7,8 @@ load_dotenv()
 
 client = MongoClient(os.environ.get("MongoConnection"))
 db = client['AirbnbAssistant']
-Users = db['GOOGLE']  
-
+Users = db['GOOGLE']
+property = db['PropertyData']
 instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question."
 
 def reset_conversation(_id):
@@ -31,16 +31,20 @@ def required_user_info(_id):
     email = Users.find_one({"_id":_id}).get("email")
     personalName = Users.find_one({"_id":_id}).get("personalName")
     user_info = {"email":email,"personalName":personalName}
-    required_info = []
-
-    if user_info["email"] == "":
-        required_info.append("email")
-    if user_info["personalName"] == "":
-        required_info.append("personalName")
-    
+    required_info = [field for field in ["email", "personalName"] if user_info[field] == ""]
     return required_info
 
-def set_user_info(_id,info):
+def set_user_info(_id:int,info):
     Users.update_one({"_id":int(_id)},{"$set":info})
 
-    
+def get_scraped_data(_id:int):
+    return property.find_one({"_id":_id})
+
+def save_property_info(_id:int,key:str,value):
+    property.update_one({"_id":_id,},{"$set":{key:value}},upsert=True)
+
+def get_current_property(_id:int):
+    try:
+        return Users.find_one({"_id":_id})["current_property"]
+    except:
+        return None
