@@ -53,6 +53,9 @@ class TelegramWebhookView(View):
     
     @bot.message_handler(content_types=['text', 'photo'])
     def chat(customer):
+        
+       
+
         if customer.content_type == "photo":
             caption = customer.caption
             print(caption)
@@ -90,6 +93,11 @@ class TelegramWebhookView(View):
 
         else:
             database.register(id_,first_name,username)
+            # check if user has current property
+            current_property = database.get_current_property(id_)
+            if current_property == None:
+                bot.send_message(id_, "please provide which property you looking for!\n aribnb link / room", reply_markup=markups(), parse_mode='HTML')
+                return None
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
             llm = ai.llm()
