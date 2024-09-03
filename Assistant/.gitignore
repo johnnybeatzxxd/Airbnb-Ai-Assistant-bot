@@ -3,6 +3,6 @@
 *.pyc
 # ignore file named test
 
-test.*
+
 .env
 

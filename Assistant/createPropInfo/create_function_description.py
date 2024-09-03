@@ -4,7 +4,7 @@ import google.generativeai as genai
 import base64
 import requests
 from .analyze_images import analyze_images
-from .pybnb import *
+from .pybnb import test
 from ..database import *
 
 class function_desc:
