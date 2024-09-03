@@ -10,6 +10,7 @@ def Get_from_room_url(roomURL: str, currency: str, check_in: str, check_out: str
     data["price"] = dataFullPrice
     return data
 def Get_from_room_id(room_id: int, currency: str, check_in: str, check_out: str, proxy_url: str):
+    print("hellow world!")
     room_url = f"https://www.airbnb.com/rooms/{room_id}"
     data, price_input, cookies = get_from_room_url(room_url, proxy_url)
     if check_in is None or check_in == "" or check_out is None or check_out == "":
