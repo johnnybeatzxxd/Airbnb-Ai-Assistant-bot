@@ -1,4 +1,4 @@
-import gobnb
+from .src import gobnb
 import json
 from ...database import *
 def test0():
