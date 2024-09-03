@@ -4,7 +4,8 @@ import google.generativeai as genai
 import base64
 import requests
 from .analyze_images import analyze_images
-from Assistant.createPropInfo.pybnb.test import * 
+print("everything is working till here")
+from .pybnb import test
 from ..database import *
 
 class function_desc:
@@ -19,11 +20,11 @@ class function_desc:
     def fetch_the_property_data(self,room_id:int):
         scraped_data = get_scraped_data(room_id)
         if  scraped_data == None:
-            return test1(room_id)
+            return test.test1(room_id)
         try:
             return scraped_data["scraped_data"]
         except:
-            return test1(room_id) 
+            return test.test1(room_id) 
 
     def get_image_keys(self,data):
        
