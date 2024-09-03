@@ -103,7 +103,7 @@ class TelegramWebhookView(View):
                     bot.send_message(id_, "please provide which property you looking for!\naribnb link / room id.", reply_markup=markups(), parse_mode='HTML')
                     return None
                 else:
-                    print(f"the id is {room_id}")
+                   
                     bot.send_message(id_, "Thank you for providing your property. I am currently working on it and will inform you once I have finished.")
                     # generate needed information using the given room id
                     if generate_property_data(room_id):

@@ -49,6 +49,7 @@ class function_desc:
 
     def create(self):
         # scrape the data from airbnb website
+        print("scraping the data from airbnb website")
         data = self.fetch_the_property_data(room_id=self.room_id)
         print("Done fetching data.")
       
