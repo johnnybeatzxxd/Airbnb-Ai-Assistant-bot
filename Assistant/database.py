@@ -48,3 +48,6 @@ def set_current_property(_id:int,room_id:int):
 
 def get_current_property(_id:int):
     return Users.find_one({"_id": _id}).get("current_property", None)
+
+def get_property_data(room_id:int):
+    return property.find_one({"_id":room_id})

@@ -111,12 +111,20 @@ function_descriptions = [
 
 class llm:
 
-    def __init__(self):
+    def __init__(self,user_id:int):
         self.responseType = "text"
         self.imgs = []
         self.random_imgs = []
-        self.function_descriptions = function_descriptions
+        self.current_property_id =  database.get_current_property(user_id)
+        self.property_data = database.get_property_data(room_id=self.current_property_id)
+        self.function_descriptions = self.property_data.get("function_description",None)
+        print(self.function_descriptions)
+        self.function_data = self.property_data.get("function_data",None)
+        print(self.fucntion_data)
         self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to be good sells man?','how is a car made','how to cook a pizza' dont assist! tell them to google it or somthing. '"
+        if self.function_descriptions is None or self.function_data is None:
+            return None
+
 
     def get_base64_encoded_image(self,image_url):
         # Send a GET request to fetch the image at the URL
@@ -124,9 +132,7 @@ class llm:
         
         # Ensure the request was successful
         if response.status_code == 200:
-            # Encode the binary content of the image
             encoded_image = base64.b64encode(response.content)
-            # Decode the bytes to a string
             return encoded_image.decode('utf-8')
         else:
             return "Failed to fetch image"
@@ -154,14 +160,13 @@ class llm:
         number_of_numbers_to_pick = 1
         random_numbers = pick_random_numbers(list_of_numbers, number_of_numbers_to_pick)
         return random_numbers
+    
     def function_call(self,response,_id):
         
         function_call = response["candidates"][0]["content"]["parts"][0]["functionCall"]
         function_name = function_call["name"]
         function_args = function_call["args"]
         print(type(function_args))
-        with open("properties.json", "r") as f:
-                properties = json.load(f)
     
         if function_name == "save_user_information":
             info = {}
@@ -189,7 +194,7 @@ class llm:
                 return {"function_response":f'1 = available\ndate = {today}\n{availability}',"image":None}
 
             try:
-                return {"function_response": properties["642919"][arg],"image":None}
+                return {"function_response": self.property_data[self.current_property_id][arg],"image":None}
                 
             except:
                 pass
@@ -203,11 +208,11 @@ class llm:
             except:
                 aminities = "All amenities"
             if aminities == "All amenities":
-                return {"function_response":str(properties['642919']['amenities']),"image":None}
+                return {"function_response":str(self.property_data[self.current_property_id]['amenities']),"image":None}
                 
             else:
                 try:
-                    return {"function_response":str(properties['642919']['amenities'][aminities]),"image":None}
+                    return {"function_response":str(self.property_data[self.current_property_id]['amenities'][aminities]),"image":None}
                     
                 except:
                     return {"function_response":'Error: amenity not found.',"image":None}
@@ -221,7 +226,7 @@ class llm:
             self.responseType = 'image'
 
             try:
-                self.imgs = properties["642919"]['images'][arg]
+                self.imgs = self.property_data[self.current_property_id]['images'][arg]
                 self.random_imgs = self.image_randomizer(self.imgs)
                 image = self.imgs[self.random_imgs[0]]
                 print("image",image)
@@ -250,7 +255,7 @@ class llm:
                       "role": "system" 
                     },
                 "tools": [{
-                    "functionDeclarations": function_descriptions
+                    "functionDeclarations": self.function_descriptions 
                     }],
                 "safetySettings": [
             {

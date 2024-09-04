@@ -29,7 +29,6 @@ class function_desc:
     def get_image_keys(self,data):
        
         image_urls = [{"id":index,"image_url":image["url"]} for index, image in enumerate(data["images"])]
-        print(f"all image urls: {image_urls}")
         def update_dict(original_dict, update_dict):
             for key, values in update_dict.items():
                 if key in original_dict:
@@ -43,7 +42,6 @@ class function_desc:
 
         for i in range(0, len(image_urls), chunk_size):
             chunk = image_urls[i:i + chunk_size]
-            print(f"this images are being analzyed: {chunk}")
             chunk_result = analyze_images(chunk)
             result = update_dict(result, chunk_result)
             
@@ -51,7 +49,6 @@ class function_desc:
 
     def create(self):
         # scrape the data from airbnb website
-        print("scraping the data from airbnb website")
         data = self.fetch_the_property_data(room_id=self.room_id)
         print("Done fetching data.")
       
