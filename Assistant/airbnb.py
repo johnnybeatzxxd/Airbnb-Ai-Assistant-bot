@@ -3,7 +3,7 @@ import datetime
 import json
 
 
-def get(query):
+def get(query,room_id):
     
     today = datetime.date.today()
     year = today.year
@@ -14,7 +14,7 @@ def get(query):
         
         url = "https://airbnb-listings.p.rapidapi.com/v2/listingPrices"
         
-        querystring = {"id":"642919","year":f"{year}","month":f"{month}"}
+        querystring = {"id":f"{room_id}","year":f"{year}","month":f"{month}"}
 
         headers = {
         	"X-RapidAPI-Key": "7332d10eabmshe3583ada7bc70a2p13b937jsnb5bd2c435279",
@@ -33,7 +33,7 @@ def get(query):
 
         url = "https://airbnb-listings.p.rapidapi.com/v2/listingavailability"
 
-        querystring = {"id":"642919","year":f"{year}","month":f"{month}"}
+        querystring = {"id":f"{room_id}","year":f"{year}","month":f"{month}"}
 
         headers = {
         	"X-RapidAPI-Key": "7332d10eabmshe3583ada7bc70a2p13b937jsnb5bd2c435279",

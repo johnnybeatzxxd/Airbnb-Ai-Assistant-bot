@@ -61,13 +61,11 @@ class TelegramWebhookView(View):
             if current_property == None:
                 return None
             caption = customer.caption
-            print(caption)
             bot.send_chat_action(customer.chat.id, 'typing')
             prompt = []
             photo = customer.photo[-1]
             raw = photo.file_id  # Get the file_id of the photo
             file_info = bot.get_file(raw)
-            print(file_info)  # Get the File object
             downloaded_file = bot.download_file(file_info.file_path)
             
             # Use BytesIO to handle the image data in memory
@@ -114,17 +112,14 @@ class TelegramWebhookView(View):
 
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
-            print("AI initialization!")
+
             llm = ai.llm(id_)
-            print(llm)
             if llm is None:
                 # the property data has a problem it should be deleted and recreated!
                 bot.send_message(id_,"Your current property is corrupted!\nyou should delete the current property data and provide your current property link to fix it.")
                 # maybe give a few options to delete the corrupted property data.. i will impliment it later.
                 return 
-            print("generating response!!")
             response = llm.generate_response(id_,conversation,required_user_info)
-            print(response)
             escaped_response = markdown.markdown(response)
             #print(response)
             response = [
@@ -137,12 +132,10 @@ class TelegramWebhookView(View):
 
                 #bot.send_media_group(id_, media_group)
                 escaped_response = remove_unsupported_tags(escaped_response)
-                print(escaped_response)
                 bot.send_photo(id_, images[0], caption=escaped_response, parse_mode='HTML')
 
             else:
                 escaped_response = remove_unsupported_tags(escaped_response)
-                print(escaped_response)
                 bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='HTML')
 
 

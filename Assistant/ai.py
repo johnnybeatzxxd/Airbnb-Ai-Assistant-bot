@@ -122,7 +122,6 @@ class llm:
         self.function_information = self.property_data.get("function_information",None)
         self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to be good sells man?','how is a car made','how to cook a pizza' dont assist! tell them to google it or somthing. '"
 
-        print(self.function_information[f"{self.current_property_id}"]["description"])
         if self.function_descriptions is None or self.function_information is None:
             return None
 
@@ -185,12 +184,12 @@ class llm:
             arg = function_args["information_needed"]
             if arg == "price":
 
-                price = airbnb.get(query="price")
+                price = airbnb.get(query="price",room_id=self.current_property_id)
                 return {"function_response": f'The price for a day is €{price}',"image":None}
                 
             if arg == "availability":
 
-                availability = airbnb.get(query="availability")
+                availability = airbnb.get(query="availability",room_id=self.current_property_id)
                 return {"function_response":f'1 = available\ndate = {today}\n{availability}',"image":None}
 
             try:
@@ -285,7 +284,7 @@ class llm:
               },}
 
 
-        print(data)
+       
         while True:
             try:
                 print("Executing request...")
