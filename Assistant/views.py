@@ -15,7 +15,7 @@ import io
 import markdown
 from dotenv import load_dotenv
 import re
-from .createPropInfo.pybnb.src.gobnb import Get_from_room_id
+import gobnb
 
 load_dotenv()
 
@@ -58,7 +58,7 @@ class TelegramWebhookView(View):
         bot.send_message(customer.chat.id,"Welcome!")
         print("welcome!")
         try:
-            fetched_data = Get_from_room_id(room_id=642919, currency="USD", check_in="2024-09-21", check_out="2024-09-22")
+            fetched_data = gobnb.Get_from_room_id(room_id=642919, currency="USD", check_in="2024-09-21", check_out="2024-09-22")
             print(f"this is the fetched data: {fetched_data}")
         except Exception as e:
             print(f"error: {e}")
