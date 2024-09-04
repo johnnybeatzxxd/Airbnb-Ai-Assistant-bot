@@ -15,6 +15,7 @@ import io
 import markdown
 from dotenv import load_dotenv
 import re
+import gobnb
 
 load_dotenv()
 
@@ -54,7 +55,8 @@ class TelegramWebhookView(View):
     
     @bot.message_handler(content_types=['text', 'photo'])
     def chat(customer):
-    
+        fetched_data = gobnb.Get_from_room_id(room_id=642919, currency="USD", check_in="2024-09-21", check_out="2024-09-22")
+        print(f"this is the fetched data: {fetched_data}")
         if customer.content_type == "photo":
             current_property = database.get_current_property(id_)
             if current_property == None:
