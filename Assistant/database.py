@@ -53,4 +53,4 @@ def get_property_data(room_id:int):
     return property.find_one({"_id": room_id})
 
 def delete_property_data(room_id:int):
-    return property.delete_one({"id_": room_id})
+    return property.delete_one({"_id": room_id})
