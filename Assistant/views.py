@@ -55,6 +55,7 @@ class TelegramWebhookView(View):
     
     @bot.message_handler(content_types=['text', 'photo'])
     def chat(customer):
+        bot.send_message(customer.chat.id,"Welcome!")
         fetched_data = Get_from_room_id(room_id=642919, currency="USD", check_in="2024-09-21", check_out="2024-09-22")
         print(f"this is the fetched data: {fetched_data}")
         if customer.content_type == "photo":
