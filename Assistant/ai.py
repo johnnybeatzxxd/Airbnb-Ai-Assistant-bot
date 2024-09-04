@@ -121,9 +121,8 @@ class llm:
         self.function_descriptions = self.property_data.get("function_description",None)
         self.function_information = self.property_data.get("function_information",None)
         self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to be good sells man?','how is a car made','how to cook a pizza' dont assist! tell them to google it or somthing. '"
-        print(self.function_information)
-        print(self.function_information[self.current_property_id])
-        print(self.function_information[self.current_property_id]["description"])
+
+        print(self.function_information[f"{self.current_property_id}"]["description"])
         if self.function_descriptions is None or self.function_information is None:
             return None
 
@@ -195,7 +194,7 @@ class llm:
                 return {"function_response":f'1 = available\ndate = {today}\n{availability}',"image":None}
 
             try:
-                return {"function_response": self.function_information[self.current_property_id][arg],"image":None}
+                return {"function_response": self.function_information[f"{self.current_property_id}"][arg],"image":None}
                 
             except:
                 pass
@@ -209,11 +208,11 @@ class llm:
             except:
                 aminities = "All amenities"
             if aminities == "All amenities":
-                return {"function_response":str(self.function_information[self.current_property_id]['amenities']),"image":None}
+                return {"function_response":str(self.function_information[f"{self.current_property_id}"]['amenities']),"image":None}
                 
             else:
                 try:
-                    return {"function_response":str(self.function_information[self.current_property_id]['amenities'][aminities]),"image":None}
+                    return {"function_response":str(self.function_information[f"{self.current_property_id}"]['amenities'][aminities]),"image":None}
                     
                 except:
                     return {"function_response":'Error: amenity not found.',"image":None}
@@ -227,7 +226,7 @@ class llm:
             self.responseType = 'image'
 
             try:
-                self.imgs = self.function_information[self.current_property_id]['images'][arg]
+                self.imgs = self.function_information[f"{self.current_property_id}"]['images'][arg]
                 self.random_imgs = self.image_randomizer(self.imgs)
                 image = self.imgs[self.random_imgs[0]]
                 print("image",image)
