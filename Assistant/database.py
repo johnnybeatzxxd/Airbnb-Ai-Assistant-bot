@@ -50,4 +50,7 @@ def get_current_property(_id:int):
     return int(Users.find_one({"_id": _id}).get("current_property", None))
 
 def get_property_data(room_id:int):
-    return property.find_one({"_id":room_id})
+    return property.find_one({"_id": room_id})
+
+def delete_property_data(room_id:int):
+    return property.delete_one({"id_": room_id})

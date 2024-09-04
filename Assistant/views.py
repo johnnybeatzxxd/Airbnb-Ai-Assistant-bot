@@ -44,7 +44,9 @@ def remove_unsupported_tags(html_string):
 def markups():
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True,row_width=2)   
     reset = telebot.types.KeyboardButton('💁‍♂ Reset')   
+    delete_property = telebot.KeyboardButton("❌Delete Property")
     markup.add(reset)
+    markup.add(delete_property)
     return markup
 class TelegramWebhookView(View):
     
@@ -59,7 +61,7 @@ class TelegramWebhookView(View):
         if customer.content_type == "photo":
             current_property = database.get_current_property(id_)
             if current_property == None:
-                return None
+                return
             caption = customer.caption
             bot.send_chat_action(customer.chat.id, 'typing')
             prompt = []
@@ -88,10 +90,16 @@ class TelegramWebhookView(View):
         first_name = customer.from_user.first_name
         username = customer.from_user.username
         id_ = customer.chat.id
-        
+        # reset the conversation
         if customer.content_type == "text" and prompt[0]["text"] == '💁‍♂ Reset':
             database.reset_conversation(id_)
-
+        # delete the current property
+        if customer.content_type == "text" and prompt[0]["text"] == "❌Delete Property":
+            current_property = database.get_current_property
+            if current_property:
+                database.delete_property_data(current_property)
+                bot.send_message(id_,"Your property has been deleted!\nplease provide a new property link or roomd id.")
+                return
         else:
             database.register(id_,first_name,username)
             # check if user has current property
