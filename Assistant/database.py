@@ -42,6 +42,7 @@ def get_scraped_data(_id:int):
 
 def save_property_info(_id:int,key:str,value):
     property.update_one({"_id":_id,},{"$set":{key:value}},upsert=True)
+    
 def set_current_property(_id:int,room_id:int = None):
     Users.update_one({"_id":_id},{"$set":{"current_property":room_id}},upsert=True)
 
