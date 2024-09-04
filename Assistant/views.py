@@ -61,7 +61,7 @@ class TelegramWebhookView(View):
             fetched_data = Get_from_room_id(room_id=642919, currency="USD", check_in="2024-09-21", check_out="2024-09-22")
             print(f"this is the fetched data: {fetched_data}")
         except Exception as e:
-            print("error")
+            print("error: {e}")
             raise e
         if customer.content_type == "photo":
             current_property = database.get_current_property(id_)
