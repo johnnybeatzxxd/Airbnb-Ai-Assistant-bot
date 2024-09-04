@@ -285,7 +285,7 @@ class llm:
               },}
 
 
-        print("generating answer ... ")
+        print(data)
         while True:
             try:
                 print("Executing request...")

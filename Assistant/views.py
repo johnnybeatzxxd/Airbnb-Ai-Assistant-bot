@@ -109,14 +109,20 @@ class TelegramWebhookView(View):
                     # generate needed information using the given room id
                     if generate_property_data(room_id):
                         database.set_current_property(id_,room_id)
+                        bot.send_message(id_,"Dear user your property is ready you can now ask me about anything about your property")
+                        database.reset_conversation(id_)
+
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
+            print("AI initialization!")
             llm = ai.llm(id_)
+            print(llm)
             if llm is None:
                 # the property data has a problem it should be deleted and recreated!
-                bot.send_message(id_,"your current property is corrupted!\nyou should delete the current property data and provide your current property link to fix it.")
+                bot.send_message(id_,"Your current property is corrupted!\nyou should delete the current property data and provide your current property link to fix it.")
                 # maybe give a few options to delete the corrupted property data.. i will impliment it later.
                 return 
+            print("generating response!!")
             response = llm.generate_response(id_,conversation,required_user_info)
             print(response)
             escaped_response = markdown.markdown(response)
