@@ -44,6 +44,9 @@ def save_property_info(_id:int,key:str,value):
     property.update_one({"_id":_id,},{"$set":{key:value}},upsert=True)
     
 def set_current_property(_id:int,room_id:int = None):
+    # if room id is not None convert it to int
+    if room_id:
+        room_id = int(room_id)
     Users.update_one({"_id":_id},{"$set":{"current_property":room_id}},upsert=True)
 
 def get_current_property(_id:int):
