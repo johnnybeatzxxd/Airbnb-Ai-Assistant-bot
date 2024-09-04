@@ -112,19 +112,21 @@ function_descriptions = [
 class llm:
 
     def __init__(self,user_id:int):
+        print("llm initialization!!")
         self.responseType = "text"
         self.imgs = []
         self.random_imgs = []
-        self.current_property_id =  database.get_current_property(user_id)
+        print("request for the current property id")
+        self.current_property_id = database.get_current_property(user_id)
+        print(self.current_property_id,type(self.current_property_id))
         self.property_data = database.get_property_data(room_id=self.current_property_id)
         self.function_descriptions = self.property_data.get("function_description",None)
         print(self.function_descriptions)
-        self.function_data = self.property_data.get("function_data",None)
+        self.function_information = self.property_data.get("function_information",None)
         print(self.fucntion_data)
         self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to be good sells man?','how is a car made','how to cook a pizza' dont assist! tell them to google it or somthing. '"
         if self.function_descriptions is None or self.function_data is None:
             return None
-
 
     def get_base64_encoded_image(self,image_url):
         # Send a GET request to fetch the image at the URL
