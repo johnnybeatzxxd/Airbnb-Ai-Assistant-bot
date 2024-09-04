@@ -55,8 +55,7 @@ class TelegramWebhookView(View):
     
     @bot.message_handler(content_types=['text', 'photo'])
     def chat(customer):
-        bot.send_message(customer.chat.id,"Welcome!")
-        print("welcome!")
+    
         if customer.content_type == "photo":
             current_property = database.get_current_property(id_)
             if current_property == None:
@@ -112,7 +111,12 @@ class TelegramWebhookView(View):
                         database.set_current_property(id_,room_id)
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
-            llm = ai.llm()
+            llm = ai.llm(id_)
+            if llm is None:
+                # the property data has a problem it should be deleted and recreated!
+                bot.send_message(id_,"your current property is corrupted!\nyou should delete the current property data and provide your current property link to fix it.")
+                # maybe give a few options to delete the corrupted property data.. i will impliment it later.
+                return 
             response = llm.generate_response(id_,conversation,required_user_info)
             print(response)
             escaped_response = markdown.markdown(response)
