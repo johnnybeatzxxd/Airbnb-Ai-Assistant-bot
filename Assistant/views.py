@@ -99,6 +99,7 @@ class TelegramWebhookView(View):
             # if user has current property
             if current_property:
                 database.delete_property_data(current_property)
+                database.set_current_property(id_)
                 bot.send_message(id_,"Your property has been deleted!\nplease provide a new property link or roomd id.")
                 return
         else:
