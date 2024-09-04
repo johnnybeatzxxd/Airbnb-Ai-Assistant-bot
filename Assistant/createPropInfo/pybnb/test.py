@@ -16,7 +16,6 @@ def test1(room_id:int=642919, currency="USD", check_in="2024-09-21", check_out="
     print(f"room_id:{room_id} is getting fetched!")
     try:
         fetched_data = gobnb.Get_from_room_id(room_id,currency,check_in,check_out,"")
-        print(fetched_data)
     except Exception as e:
         print(f"Error: {e}")
     fetched_data['room_id'] = room_id
