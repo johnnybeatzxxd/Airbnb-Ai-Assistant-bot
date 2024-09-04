@@ -26,7 +26,7 @@ def get_room_id(url):
 
 
 def generate_property_data(room_id:int):
-        print("let go..")
+        print("let's go..")
         function_description = function_desc(room_id=int(room_id))
         function_description.create()
         generate_pure_data(room_id=int(room_id))

@@ -57,12 +57,6 @@ class TelegramWebhookView(View):
     def chat(customer):
         bot.send_message(customer.chat.id,"Welcome!")
         print("welcome!")
-        try:
-            fetched_data = gobnb.Get_from_room_id(room_id=642919, currency="USD", check_in="2024-09-21", check_out="2024-09-22")
-            print(f"this is the fetched data: {fetched_data}")
-        except Exception as e:
-            print(f"error: {e}")
-            raise e
         if customer.content_type == "photo":
             current_property = database.get_current_property(id_)
             if current_property == None:
@@ -127,13 +121,9 @@ class TelegramWebhookView(View):
                 {"text": response},  
             ] 
             database.add_message(id_,response,"model")
-            images = []
             if llm.responseType == 'image':
-                for i in llm.random_imgs:
-                    images.append(llm.imgs[i])            
-                media_group = []
-                for image in images:
-                    media_group.append(telebot.types.InputMediaPhoto(image,escaped_response))
+                images = [llm.imgs[i] for i in llm.random_imgs]
+                media_group = [telebot.types.InputMediaPhoto(image, escaped_response) for image in images]
 
                 #bot.send_media_group(id_, media_group)
                 escaped_response = remove_unsupported_tags(escaped_response)
