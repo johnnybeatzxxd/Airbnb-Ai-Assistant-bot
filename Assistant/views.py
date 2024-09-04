@@ -95,6 +95,7 @@ class TelegramWebhookView(View):
         # reset the conversation
         if customer.content_type == "text" and prompt[0]["text"] == '💁‍♂ Reset':
             database.reset_conversation(id_)
+            return
         # delete the current property
         if customer.content_type == "text" and prompt[0]["text"] == "❌Delete Property":
             # if user has current property
@@ -103,14 +104,15 @@ class TelegramWebhookView(View):
                 database.set_current_property(id_,None)
                 bot.send_message(id_,"Your property has been deleted!\nplease provide a new property link or roomd id.")
                 return
+
         else:
             database.register(id_,first_name,username)
             # check if user has current property
             if current_property is None:
                 room_id = get_room_id(customer.text)
                 if room_id is None:
-                    bot.send_message(id_, "please provide which property you looking for!\naribnb link / room id.", reply_markup=markups(), parse_mode='HTML')
-                    return None
+                    bot.send_message(id_, "please provide which property you looking for!\nairbnb link / room id.", reply_markup=markups(), parse_mode='HTML')
+                    return
                 else:
                    
                     bot.send_message(id_, "Thank you for providing your property. I am currently working on it and will inform you once I have finished.")
@@ -119,6 +121,7 @@ class TelegramWebhookView(View):
                         database.set_current_property(id_,room_id)
                         bot.send_message(id_,"Dear user your property is ready you can now ask me about anything about your property")
                         database.reset_conversation(id_)
+                        return
 
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
