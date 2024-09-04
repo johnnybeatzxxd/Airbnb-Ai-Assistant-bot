@@ -47,12 +47,14 @@ def analyze_images(images):
     "max_output_tokens": 8192,
      "response_mime_type": "application/json",
     }
-
-    model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    generation_config=generation_config,
-    system_instruction="your are a helpful image analyzer!",
-    )
+    try:
+      model = genai.GenerativeModel(
+      model_name="gemini-1.5-flash",
+      generation_config=generation_config,
+      system_instruction="your are a helpful image analyzer!",
+      )
+    except Exception as e:
+        print(f"Error:{e}")
     print("model initialized")
     chat_session = model.start_chat(
         history=conversations,
