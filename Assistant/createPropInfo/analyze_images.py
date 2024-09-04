@@ -2,8 +2,11 @@ import google.generativeai as genai
 import base64
 import requests
 import json
+from dotenv import load_dotenv
+import os
 
-
+load_dotenv()
+api_key = os.environ.get("GeminiProKey")
 
 
 def image_to_base64(image_url):
@@ -16,9 +19,9 @@ def image_to_base64(image_url):
 
 
 def analyze_images(images):
-
-    genai.configure(api_key="AIzaSyCD0RoVaeiFKfuyekoMNs6JhpUn7CwL464")
-
+    print("on config")
+    genai.configure(api_key=api_key)
+    print("configuration done ")
     conversations = []
     for image in images:
         conversations.append({
@@ -35,6 +38,7 @@ def analyze_images(images):
         }
       ]
     },)
+    print("conversation built!")
     # Create the model
     generation_config = {
     "temperature": 1,
@@ -49,11 +53,12 @@ def analyze_images(images):
     generation_config=generation_config,
     system_instruction="your are a helpful image analyzer!",
     )
-    
+    print("model initialized")
     chat_session = model.start_chat(
         history=conversations,
         enable_automatic_function_calling=False,
     )
+    print("chat session created!")
     response = chat_session.send_message("""
         I want you to see all the images carefuly and create a JSON where the key is the image type and the value is an array of the image id. empty array is not allowed!
         Example: "images":{
@@ -62,6 +67,8 @@ def analyze_images(images):
       "bathroom":[ids],
       "kitchen":[ids],
     }""",)
+    print(f"request has been made here is the response:{response}")
     parts = json.loads(response.text)
+    print("converted to json!")
     return parts["images"]
 
