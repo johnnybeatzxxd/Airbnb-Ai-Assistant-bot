@@ -6,7 +6,9 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-api_key = os.environ.get("GeminiProKey")
+api_key = os.environ.get("GeminiProKey1")
+if api_key is None:
+    api_key = os.environ.get("GeminiProKey")
 
 
 def image_to_base64(image_url):
