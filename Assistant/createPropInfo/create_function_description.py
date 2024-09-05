@@ -122,7 +122,7 @@ class function_desc:
         
     {
         "name": "include_image",
-        "description": "this function must be triggered when you always talk about specific area in our property. and when you want to show the area you are talking about.",
+        "description": "this function must be triggered when you always talk about specific area in our property. this function returns random picture of your query image if the picture doesnt much the image you are looking for you can call this function multiple times to get diffrent picture.",
         "parameters": {
             "type": "object",
             "properties": {

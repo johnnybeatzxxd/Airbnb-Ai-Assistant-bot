@@ -12,7 +12,11 @@ import traceback
 load_dotenv()
 
 gemini_api_key = os.environ.get('GeminiProKey')
-url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-exp-0801:generateContent?key={}".format(gemini_api_key)
+
+gemini_model = os.environ.get('GeminiProModel')
+if gemini_model is None:
+    gemini_model = "gemini-1.5-flash-exp-0827"
+url = "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent?key={}".format(gemini_model,gemini_api_key)
 headers = {"Content-Type": "application/json",}
 
 
@@ -120,7 +124,7 @@ class llm:
         self.property_data = database.get_property_data(self.current_property_id)
         self.function_descriptions = self.property_data.get("function_description",None)
         self.function_information = self.property_data.get("function_information",None)
-        self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to be good sells man?','how is a car made','how to cook a pizza' dont assist! tell them to google it or somthing. '"
+        self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to be good sells man?','how is a car made','how to cook a pizza' dont assist! tell them to google it or something. '"
 
         if self.function_descriptions is None or self.function_information is None:
             return None
