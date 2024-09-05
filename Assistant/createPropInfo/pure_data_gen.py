@@ -28,7 +28,7 @@ def generate_pure_data(room_id):
     new_data = {f"{room_id}":{
         "title":title,
         "description":description,
-        "location":location_description,
+        "location_description":location_description,
         "location_cordinates":location_cordinates,
         "rules":rules,
         "aminities":aminites_info,

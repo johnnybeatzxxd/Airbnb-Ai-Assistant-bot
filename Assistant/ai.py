@@ -236,7 +236,7 @@ class llm:
                 encoded_image = self.get_base64_encoded_image(image)
                 if encoded_image == "Failed to fetch image":
                     encoded_image = None
-                return {"function_response":f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.',"image":encoded_image}
+                return {"function_response":f'one of {arg} image will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.',"image":encoded_image}
 
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
