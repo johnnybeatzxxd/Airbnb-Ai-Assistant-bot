@@ -52,7 +52,7 @@ def analyze_images(images):
     model = genai.GenerativeModel(
     model_name="gemini-1.5-pro-exp-0827",
     generation_config=generation_config,
-    system_instruction="your are a helpful image analyzer!",
+    system_instruction="You are a meticulous and detail-oriented image analyzer!", 
     )
 
     chat_session = model.start_chat(
@@ -60,13 +60,40 @@ def analyze_images(images):
         enable_automatic_function_calling=False,
     )
     response = chat_session.send_message("""
-        I want you to see all the images carefuly and create a JSON where the key is the image type and the value is an array of the image id. empty array is not allowed!
-        Example: "images":{
-      "bedroom":[ids],
-      "outdoor":[ids],
-      "bathroom":[ids],
-      "kitchen":[ids],
-    }""",)
+        ## Detailed Image Analysis Instructions:
+
+        I have a list of images that I need you to carefully analyze and classify. Your task is to create a JSON object that accurately reflects the content of each image. 
+
+        **JSON Structure:**
+
+        The JSON object should have a single key called "images". The value of this key should be another object containing key-value pairs.
+
+        * **Keys:** Represent the dominant type or category of the image (e.g., "bedroom", "outdoor", "bathroom", "kitchen", "living room", "office", etc.). Be specific and descriptive when choosing the category.
+        * **Values:** Each key should have a value that is an array of image IDs. These IDs uniquely identify each image that belongs to that specific category. 
+
+        **Example:**
+
+        ```json
+        {
+          "images": {
+            "bedroom": [ids],
+            "outdoor": [ids],
+            "bathroom": [ids],
+            "kitchen": [ids]
+          }
+        }
+        ```
+
+        **Important Considerations:**
+
+        * **Accuracy:**  Strive for the highest possible accuracy in classifying the images. 
+        * **Dominant Category:** If an image contains elements of multiple categories, choose the category that is most prominent or dominant in the image. 
+        * **Specificity:** Be as specific as possible when defining the image categories. For example, instead of just "outdoor", you could use "park", "beach", "forest", etc.
+        * **No Empty Arrays:** Ensure that every category key has at least one image ID associated with it. Empty arrays are not allowed.
+        * **Maximum Number of Keys:** The maximum number of unique category keys in the JSON object should be 15. If you encounter more than 15 distinct categories, try to group similar categories together or use a more general category to reduce the number of keys
+        
+        Please analyze the images thoroughly and create the JSON object according to these instructions. I appreciate your attention to detail! 
+        """,)
 
     parts = json.loads(response.text)
     return parts["images"]
