@@ -21,7 +21,7 @@ def image_to_base64(image_url):
 
 
 def analyze_images(images):
-
+    print(images)
     genai.configure(api_key=api_key)
     conversations = []
     for image in images:
@@ -96,5 +96,6 @@ def analyze_images(images):
         """,)
 
     parts = json.loads(response.text)
+    print(parts)
     return parts["images"]
 
