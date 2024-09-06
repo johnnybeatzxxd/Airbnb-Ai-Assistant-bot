@@ -16,6 +16,7 @@ gemini_api_key = os.environ.get('GeminiProKey')
 gemini_model = os.environ.get('GeminiProModel')
 if gemini_model is None:
     gemini_model = "gemini-1.5-flash-exp-0827"
+
 url = "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent?key={}".format(gemini_model,gemini_api_key)
 headers = {"Content-Type": "application/json",}
 
@@ -25,101 +26,13 @@ year = today.year
 month = today.month
 day = today.day
 
-
-function_descriptions = [
-        {
-            "name": "save_user_information",
-            "description": "This function must be triggerd when customer provide their email and name. if the user provide one of them it should be saved instantly",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "save the name of the customer eg. anuar,yishak ...",
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "save the email of the customer eg. anuar@...,yishak@...",
-                        },
-
-                },
-                "required": ["name","email"],
-            }
-            },
-        {
-            "name": "off_topic",
-            "description": "this function must be triggered when user prompt is not related to our service and business. eg. 'how to install requerments of script thats in text file','how to be good sells man?','how is a car made','how to cook a piza','whats inside car engine','What has a mouth but never speaks?'",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "off_topic": {
-                        "type": "string",
-                        "description": "true or false",
-                    }
-
-                },
-                "required": ["off_topic"],
-            }
-            },
-            
-        {
-            "name": "include_image",
-            "description": "this function must be triggered when you always talk about specific thing in our property. like about the kitchen bathroom bedroom...",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "image_of": {
-                        "type": "string",
-                        "description": "the image to send with your responses. It must be one of the following: [outdoor,house,bedroom,bathroom]. Otherwise, say i dont have an image, because the app will crash. choose one of them that matches with user question.",
-                    }
-
-                },
-                "required": ["image_of"],
-            }
-        },
-        
-        
-        {
-            "name": "get_property_info",
-            "description": "you will get the answer of any question about our property.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "information_needed": {
-                        "type": "string",
-                        "description": "The type of information requested. It must be one of the following: [title,description,price,availability,bedroom,location,rules,Safety & property]. Otherwise, the app will crash.",
-                    },               
-
-                },
-                "required": ['information_needed']
-            }
-            },
-            {
-            "name": "get_aminities_info",
-            "description": "This function returns the information about a specific amenity. use ['All amenities'] to get all the amenities details at once.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "aminities": {
-                        "type": "string",
-                        "description": 'The name of the amenity. It must be one of the following: ["Bathroom", "Bedroom and laundry", "Essentials", "Entertainment", "Family", "Heating and cooling", "Home safety", "Internet and office", "Kitchen and dining", "Location features", "Outdoor", "Parking and facilities", "Services", "Not included","All amenities"]. Otherwise, the app will crash. Use "All amenities" to get all the amenities.',
-                    }
-                    
-
-                },
-                "required": ['aminities']
-            }
-            }      
-] 
-
-
 class llm:
 
-    def __init__(self,user_id:int):
+    def __init__(self,user_id:int,bot):
         self.responseType = "text"
         self.imgs = []
         self.random_imgs = []
-        
+        self.bot = bot
         self.current_property_id = database.get_current_property(user_id)
         self.property_data = database.get_property_data(self.current_property_id)
         self.function_descriptions = self.property_data.get("function_description",None)
@@ -186,16 +99,23 @@ class llm:
     
         if function_name == "get_property_info":
             arg = function_args["information_needed"]
+            # if the query is price
             if arg == "price":
-
                 price = airbnb.get(query="price",room_id=self.current_property_id)
                 return {"function_response": f'The price for a day is €{price}',"image":None}
-                
+            
+            # if the query is  availablity  
             if arg == "availability":
-
                 availability = airbnb.get(query="availability",room_id=self.current_property_id)
                 return {"function_response":f'1 = available\ndate = {today}\n{availability}',"image":None}
-
+            
+            # if the query is location
+            if arg == "location_description":
+                
+                latitude = self.function_information[f"{self.current_property_id}"]["location_cordinates"]["latitude"]
+                longitude = self.function_information[f"{self.current_property_id}"]["location_cordinates"]["longitude"]
+                self.bot.send_location(_id,latitude=latitude,longitude=longitude)
+                
             try:
                 return {"function_response": self.function_information[f"{self.current_property_id}"][arg],"image":None}
                 
@@ -244,7 +164,6 @@ class llm:
                 self.responseType = 'text'
                 return {"function_response":'image not found with this argument please use one of them [outdoor, house, bedroom, bathroom]. If it doesn\'t match you can just pass.',"image":None}
 
-
     def generate_response(self,_id,messages,required_user_info,):
     
         data = {
@@ -286,9 +205,7 @@ class llm:
                 "stopSequences": [],
                 #'safety_settings': [{"category":"HARM_CATEGORY_DEROGATORY","threshold":4},{"category":"HARM_CATEGORY_TOXICITY","threshold":4},{"category":"HARM_CATEGORY_VIOLENCE","threshold":4},{"category":"HARM_CATEGORY_SEXUAL","threshold":4},{"category":"HARM_CATEGORY_MEDICAL","threshold":4},{"category":"HARM_CATEGORY_DANGEROUS","threshold":4}]
               },}
-
-
-       
+        
         while True:
             try:
                 print("Executing request...")

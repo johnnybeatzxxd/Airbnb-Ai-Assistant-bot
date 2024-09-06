@@ -125,8 +125,8 @@ class TelegramWebhookView(View):
 
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
-
-            llm = ai.llm(id_)
+            
+            llm = ai.llm(id_,bot)
             if llm is None:
                 # the property data has a problem it should be deleted and recreated!
                 bot.send_message(id_,"Your current property is corrupted!\nyou should delete the current property data and provide your current property link to fix it.")
