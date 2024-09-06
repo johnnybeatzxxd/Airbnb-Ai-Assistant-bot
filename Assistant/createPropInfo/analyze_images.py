@@ -50,7 +50,7 @@ def analyze_images(images):
     }
 
     model = genai.GenerativeModel(
-    model_name="gemini-1.5-pro-exp-0827",
+    model_name="gemini-1.5-flash",
     generation_config=generation_config,
     system_instruction="You are a meticulous and detail-oriented image analyzer!", 
     )
