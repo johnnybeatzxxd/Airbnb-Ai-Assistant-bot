@@ -59,7 +59,7 @@ class TelegramWebhookView(View):
     def chat(customer):
     
         if customer.content_type == "photo":
-            current_property = database.get_current_property(id_)
+            current_property = database.get_current_property(customer.chat.id)
             if current_property == None:
                 return
             caption = customer.caption
