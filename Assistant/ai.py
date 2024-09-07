@@ -131,7 +131,8 @@ class llm:
             except:
                 aminities = "All amenities"
             if aminities == "All amenities":
-                return {"function_response":str(self.function_information[f"{self.current_property_id}"]['amenities']),"image":None}
+                amenity = self.function_information[f"{self.current_property_id}"]['amenities']
+                return {"function_response":str(amenity.keys()),"image":None}
                 
             else:
                 try:
