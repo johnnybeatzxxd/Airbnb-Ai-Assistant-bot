@@ -130,8 +130,8 @@ class llm:
                 aminities = function_args['aminities']
             except:
                 aminities = "All amenities"
-            if aminities == "All amenities":
                 amenity = self.function_information[f"{self.current_property_id}"]['amenities']
+                print(amenity)
                 return {"function_response":str(amenity.keys()),"image":None}
                 
             else:
