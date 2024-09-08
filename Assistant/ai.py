@@ -127,16 +127,18 @@ class llm:
 
         if function_name == "get_aminities_info": 
             amenities = function_args['aminities']
-            
+            print(amenities)
             if amenities == "All amenities":
+                print("its all amenitites!")
                 try:
-                    amenity = self.function_information[f"{self.current_property_id}"]['amenities']
-                    return {"function_response":str(amenity.keys()),"image":None}
+                    amenity = self.function_information[f"{self.current_property_id}"]['aminities']
+                    print(f"found amenity:{amenity}")
+                    return {"function_response":amenity.keys(),"image":None}
                 except:
                     return {"function_response":"Error: amenity not found.","image":None}
 
             try:
-                amenity = self.function_information[f"{self.current_property_id}"]['amenities'][amenities]
+                amenity = self.function_information[f"{self.current_property_id}"]['aminities'][amenities]
                 return {"function_response":str(amenity),"image":None}
             except:
                     return {"function_response":"Error: amenity not found.","image":None}
