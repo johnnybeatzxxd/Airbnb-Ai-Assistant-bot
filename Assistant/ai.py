@@ -128,7 +128,7 @@ class llm:
         if function_name == "get_aminities_info": 
             amenities = function_args['aminities']
             
-            if amenities is "All amenities":
+            if amenities == "All amenities":
                 try:
                     amenity = self.function_information[f"{self.current_property_id}"]['amenities']
                     return {"function_response":str(amenity.keys()),"image":None}
