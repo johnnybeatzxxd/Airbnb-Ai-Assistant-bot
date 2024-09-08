@@ -126,21 +126,21 @@ class llm:
                
 
         if function_name == "get_aminities_info": 
-            try:
-                aminities = function_args['aminities']
-            except:
-                aminities = "All amenities"
-                amenity = self.function_information[f"{self.current_property_id}"]['amenities']
-                print(amenity)
-                return {"function_response":str(amenity.keys()),"image":None}
-                
-            else:
+            amenities = function_args['aminities']
+            
+            if amenities is "All amenities":
                 try:
-                    return {"function_response":str(self.function_information[f"{self.current_property_id}"]['amenities'][aminities]),"image":None}
-                    
+                    amenity = self.function_information[f"{self.current_property_id}"]['amenities']
+                    return {"function_response":str(amenity.keys()),"image":None}
                 except:
-                    return {"function_response":'Error: amenity not found.',"image":None}
-                    
+                    return {"function_response":"Error: amenity not found.","image":None}
+
+            try:
+                amenity = self.function_information[f"{self.current_property_id}"]['amenities'][amenities]
+                return {"function_response":str(amenity),"image":None}
+            except:
+                    return {"function_response":"Error: amenity not found.","image":None}
+
 
         if function_name == "off_topic":
             return {"function_response":'you should only assist the user with only our property and business realted question.so dont assist! tell them to google it or somthing.',"image":None}
