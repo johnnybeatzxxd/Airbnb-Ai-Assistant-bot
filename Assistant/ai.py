@@ -133,7 +133,7 @@ class llm:
                 try:
                     amenity = self.function_information[f"{self.current_property_id}"]['aminities']
                     print(f"found amenity:{amenity}")
-                    return {"function_response":str(amenity.keys()),"image":None}
+                    return {"function_response":f"we have the data of {amenity.keys()} which one is needed?","image":None}
                 except:
                     return {"function_response":"Error: amenity not found.","image":None}
 
