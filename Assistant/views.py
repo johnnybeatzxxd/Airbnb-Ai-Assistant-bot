@@ -91,7 +91,7 @@ class TelegramWebhookView(View):
         username = customer.from_user.username
         id_ = customer.chat.id
         current_property = database.get_current_property(id_)
-        print(current_property)
+       
         # reset the conversation
         if customer.content_type == "text" and prompt[0]["text"] == '💁‍♂ Reset':
             database.reset_conversation(id_)

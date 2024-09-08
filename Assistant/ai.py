@@ -129,11 +129,11 @@ class llm:
             amenities = function_args['aminities']
             print(amenities)
             if amenities == "All amenities":
-                print("its all amenitites!")
+                
                 try:
                     amenity = self.function_information[f"{self.current_property_id}"]['aminities']
                     print(f"found amenity:{amenity}")
-                    return {"function_response":f"we have the data of {amenity.keys()} which one is needed?","image":None}
+                    return {"function_response":f"we have the data of {amenity.keys()} ask the user which information wanted.","image":None}
                 except:
                     return {"function_response":"Error: amenity not found.","image":None}
 
