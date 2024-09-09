@@ -68,7 +68,7 @@ def analyze_images(images):
 
         The JSON object should have a single key called "images". The value of this key should be another object containing key-value pairs.
 
-        * **Keys:** Represent the dominant type or category of the image (e.g., "bedroom", "outdoor", "bathroom", "kitchen", "living room", "office", etc.). Be specific and descriptive when choosing the category.
+        * **Keys:** Represent the dominant type or category with three word of the image (e.g., "bedroom_double_bed", "outdoor_parking_lot", "bathroom_washing_sink", "kitchen_cooking_cabinate" etc.). Be specific and descriptive when choosing the category.
         * **Values:** Each key should have a value that is an array of image IDs. These IDs uniquely identify each image that belongs to that specific category. 
 
         **Example:**
@@ -90,7 +90,7 @@ def analyze_images(images):
         * **Dominant Category:** If an image contains elements of multiple categories, choose the category that is most prominent or dominant in the image. 
         * **Specificity:** Be as specific as possible when defining the image categories. For example, instead of just "outdoor", you could use "park", "beach", "forest", etc.
         * **No Empty Arrays:** Ensure that every category key has at least one image ID associated with it. Empty arrays are not allowed.
-        * **Maximum Number of Keys:** The maximum number of unique category keys in the JSON object should be 15. If you encounter more than 15 distinct categories, try to group similar categories together or use a more general category to reduce the number of keys
+        * **Maximum Number of Keys:** The maximum number of unique category keys in the JSON object should be 20. If you encounter more than 20 distinct categories, try to group similar categories together or use a more general category to reduce the number of keys
         
         Please analyze the images thoroughly and create the JSON object according to these instructions. I appreciate your attention to detail! 
         """,)
