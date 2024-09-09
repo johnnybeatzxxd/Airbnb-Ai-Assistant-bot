@@ -229,80 +229,90 @@ class llm:
             except requests.exceptions.RequestException as e:
                 print(f'Request failed: {e}, retrying...')
                 time.sleep(5)
-        
-        while "functionCall" in response_data["candidates"][0]["content"]["parts"][0]:
+
+        messages_to_send = []
+        for part in response_data["candidates"][0]["content"]["parts"]:
             
-            function_call = response_data["candidates"][0]["content"]["parts"][0]["functionCall"]
-            function_name = function_call["name"]
+            if part.get("text",None):
+                self.responseType = "text"
+                messages_to_send.append({"response":part["text"],"response_type":self.responseType})
+                continue
 
-            function_response = self.function_call(response_data,_id)
-            function_response_message = function_response["function_response"]
-            function_response_image = function_response["image"]
-            print(function_response_message)
-            self.bot.send_chat_action(_id, 'typing')
+            while "functionCall" in part:
+                function_call = part["functionCall"]
+                function_name = function_call["name"]
 
-            result = json.dumps(function_response)
-            function = [{
-                        "functionCall": {
-                        "name": function_name,
-                        "args": function_call["args"]
-                                        }             
-                            }]
-            functionResponse = [{
-                                "functionResponse":{
-                                    "name": function_name,
-                                    "response":{
+                function_response = self.function_call(response_data,_id)
+                function_response_message = function_response["function_response"]
+                function_response_image = function_response["image"]
+                print(function_response_message)
+                self.bot.send_chat_action(_id, 'typing')
+
+                result = json.dumps(function_response)
+                function = [{
+                            "functionCall": {
+                            "name": function_name,
+                            "args": function_call["args"]
+                                            }             
+                                }]
+                functionResponse = [{
+                                    "functionResponse":{
                                         "name": function_name,
-                                        "content": function_response_message
+                                        "response":{
+                                            "name": function_name,
+                                            "content": function_response_message
+                                                    }
+                                        }  
+                                        },
+                                        
+                                        ]
+                if function_response_image != None:
+                    functionResponse.append({"text": "here is the image sent to the user describe it well."},)
+                    functionResponse.append({
+                        "inlineData": {
+                            "mimeType": "image/png",
+                            "data": function_response_image,
+                            }
+                            }
+                        )
+                database.add_message(_id,function,"model")
+                database.add_message(_id,functionResponse,"function")   
+                messages.append({
+                                "role": "model",
+                                "parts": function
+                                },)
+                messages.append({"role": "function",
+                                "parts": functionResponse
+                                    }) 
+                while True:
+                    try:
+                        print("Executing request...")
+                        response = requests.post(url, headers=headers, json=data)
+                        print(f"Status Code: {response.status_code}, Response Body: {response.text}")
+                        
+                        if response.status_code == 200:
+                            response_data = response.json()
+                            if response_data:
+                                print("Valid response received:", response_data)
+                                break
+                            else:
+                                print("Empty JSON response received, retrying...")
+                                ask_response = {"role": "user",
+                                                "parts": [{"text": "??"}]
                                                 }
-                                    }  
-                                    },
-                                    
-                                    ]
-            if function_response_image != None:
-                functionResponse.append({"text": "here is the image sent to the user describe it well."},)
-                functionResponse.append({
-                    "inlineData": {
-                        "mimeType": "image/png",
-                        "data": function_response_image,
-                        }
-                        }
-                    )
-            database.add_message(_id,function,"model")
-            database.add_message(_id,functionResponse,"function")   
-            messages.append({
-                            "role": "model",
-                            "parts": function
-                            },)
-            messages.append({"role": "function",
-                            "parts": functionResponse
-                                }) 
-            while True:
-                try:
-                    print("Executing request...")
-                    response = requests.post(url, headers=headers, json=data)
-                    print(f"Status Code: {response.status_code}, Response Body: {response.text}")
-                    
-                    if response.status_code == 200:
-                        response_data = response.json()
-                        if response_data:
-                            print("Valid response received:", response_data)
-                            break
+                                if messages[-1] != ask_response:
+                                    messages.append(ask_response)
+                                    print(messages[-1])
                         else:
-                            print("Empty JSON response received, retrying...")
-                            ask_response = {"role": "user",
-                                            "parts": [{"text": "??"}]
-                                            }
-                            if messages[-1] != ask_response:
-                                messages.append(ask_response)
-                                print(messages[-1])
-                    else:
-                        print(f"Received non-200 status code: {response.status_code}")
-                    
-                    time.sleep(5)
-                except requests.exceptions.RequestException as e:
-                    print(f'Request failed: {e}, retrying...')
-                    time.sleep(5)
-            
+                            print(f"Received non-200 status code: {response.status_code}")
+                        
+                        time.sleep(5)
+                    except requests.exceptions.RequestException as e:
+                        print(f'Request failed: {e}, retrying...')
+                        time.sleep(5)
 
-        return response_data["candidates"][0]["content"]["parts"][0]["text"]
+            messages_to_send.append({"response":response_data["candidates"][0]["content"]["parts"][0]["text"],"response_type":self.responseType})
+
+        print(messages_to_send)
+        return messages_to_send
+        #return response_data["candidates"][0]["content"]["parts"][0]["text"]
