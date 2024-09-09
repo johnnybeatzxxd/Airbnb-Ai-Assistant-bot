@@ -241,7 +241,7 @@ class llm:
             while "functionCall" in part:
                 function_call = part["functionCall"]
                 function_name = function_call["name"]
-
+                print(function_name)
                 function_response = self.function_call(response_data,_id)
                 function_response_message = function_response["function_response"]
                 function_response_image = function_response["image"]
@@ -310,9 +310,8 @@ class llm:
                     except requests.exceptions.RequestException as e:
                         print(f'Request failed: {e}, retrying...')
                         time.sleep(5)
-
+            print("adding to the message list")
             messages_to_send.append({"response":response_data["candidates"][0]["content"]["parts"][0]["text"],"response_type":self.responseType})
-
-        print(messages_to_send)
+            print(messages_to_send)
         return messages_to_send
         #return response_data["candidates"][0]["content"]["parts"][0]["text"]
