@@ -50,14 +50,19 @@ def markups():
     return markup
 
 def send_messages(_id:int,messages:list,):
-    text = message["text"]
-    images = message["response_image"]
-    escaped_response = markdown.markdown(text)
-    response = [
-                {"text": text},  
-            ] 
-    database.add_message(_id,response,"model")
+    
     for message in messages:
+        print("sending the messages")
+        text = message["text"]
+        images = message["response_image"]
+        print(f"text:{text}")
+        print(f"images:{images}")
+        escaped_response = markdown.markdown(text)
+        response = [
+                    {"text": text},  
+                ] 
+        database.add_message(_id,response,"model")\
+        
         if message["response_type"] == "text":
             escaped_response = remove_unsupported_tags(escaped_response)
             bot.send_message(_id,text,reply_markup=markups)
@@ -155,7 +160,9 @@ class TelegramWebhookView(View):
                 # maybe give a few options to delete the corrupted property data.. i will impliment it later.
                 return 
             messages = llm.generate_response(id_,conversation,required_user_info)
+            print(messages)
             send_messages(id_, messages) 
+
 
         
 

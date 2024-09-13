@@ -287,5 +287,6 @@ class llm:
                                     }) 
         if messages[-1]["role"] == "function":
             self.generate_response(_id,messages)
+        print(self.messages_to_send)
         return self.messages_to_send
         #return response_data["candidates"][0]["content"]["parts"][0]["text"]
