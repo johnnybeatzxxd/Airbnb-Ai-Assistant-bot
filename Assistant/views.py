@@ -53,7 +53,7 @@ def send_messages(_id:int,messages:list,):
     
     for message in messages:
         print("sending the messages")
-        text = message["text"]
+        text = message["response"]
         images = message["response_image"]
         print(f"text:{text}")
         print(f"images:{images}")
