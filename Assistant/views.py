@@ -58,10 +58,11 @@ def send_messages(_id:int,messages:list,):
         print(f"text:{text}")
         print(f"images:{images}")
         escaped_response = markdown.markdown(text)
+        print(escaped_response)
         response = [
                     {"text": text},  
                 ] 
-        database.add_message(_id,response,"model")\
+        database.add_message(_id,response,"model")
         
         if message["response_type"] == "text":
             escaped_response = remove_unsupported_tags(escaped_response)
