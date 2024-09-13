@@ -48,6 +48,29 @@ def markups():
     markup.add(reset)
     markup.add(delete_property)
     return markup
+
+def send_messages(_id:int,messages:list,):
+    text = message["text"]
+    images = message["response_image"]
+    escaped_response = markdown.markdown(text)
+    response = [
+                {"text": text},  
+            ] 
+    database.add_message(_id,response,"model")
+    for message in messages:
+        if message["response_type"] == "text":
+            escaped_response = remove_unsupported_tags(escaped_response)
+            bot.send_message(_id,text,reply_markup=markups)
+        if message["response_type"] == "image":
+
+            media_group = [telebot.types.InputMediaPhoto(image, escaped_response) for image in images]
+
+            #bot.send_media_group(id_, media_group)
+            escaped_response = remove_unsupported_tags(escaped_response)
+            bot.send_photo(_id, images[0], caption=escaped_response, parse_mode='HTML')
+            
+
+
 class TelegramWebhookView(View):
     
     @method_decorator(csrf_exempt)
@@ -73,15 +96,14 @@ class TelegramWebhookView(View):
             # Use BytesIO to handle the image data in memory
             image_stream = io.BytesIO(downloaded_file)
             image_data = base64.b64encode(image_stream.getvalue()).decode('utf-8')
-            
-            if caption != None:
-                prompt.append({"text": caption},)
             prompt.append({
                 "inlineData": {
                     "mimeType": "image/png",
                     "data": image_data
                 }
             })
+            if caption != None:
+                prompt.append({"text": caption},)
         if customer.content_type == "text":
             prompt = [
                 {"text": customer.text},  
@@ -132,25 +154,8 @@ class TelegramWebhookView(View):
                 bot.send_message(id_,"Your current property is corrupted!\nyou should delete the current property data and provide your current property link to fix it.")
                 # maybe give a few options to delete the corrupted property data.. i will impliment it later.
                 return 
-            response = llm.generate_response(id_,conversation,required_user_info)
-            escaped_response = markdown.markdown(response)
-            #print(response)
-            response = [
-                {"text": response},  
-            ] 
-            database.add_message(id_,response,"model")
-            if llm.responseType == 'image':
-                images = [llm.imgs[i] for i in llm.random_imgs]
-                media_group = [telebot.types.InputMediaPhoto(image, escaped_response) for image in images]
-
-                #bot.send_media_group(id_, media_group)
-                escaped_response = remove_unsupported_tags(escaped_response)
-                bot.send_photo(id_, images[0], caption=escaped_response, parse_mode='HTML')
-
-            else:
-                escaped_response = remove_unsupported_tags(escaped_response)
-                bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='HTML')
-
+            messages = llm.generate_response(id_,conversation,required_user_info)
+            send_messages(id_, messages) 
 
         
 
