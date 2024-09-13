@@ -65,8 +65,10 @@ def send_messages(_id:int,messages:list,):
         database.add_message(_id,response,"model")
         
         if message["response_type"] == "text":
+            print("its text")
             escaped_response = remove_unsupported_tags(escaped_response)
-            bot.send_message(_id,text,reply_markup=markups)
+            print(escaped_response)
+            bot.send_message(_id,text,reply_markup=markups,parse_mode='HTML')
         if message["response_type"] == "image":
 
             media_group = [telebot.types.InputMediaPhoto(image, escaped_response) for image in images]
