@@ -68,7 +68,7 @@ def send_messages(_id:int,messages:list,):
             print("its text")
             escaped_response = remove_unsupported_tags(escaped_response)
             print(escaped_response)
-            bot.send_message(_id,escaped_response,reply_markup=markups,parse_mode='HTML')
+            bot.send_message(_id,escaped_response,reply_markup=markups(),parse_mode='HTML')
         if message["response_type"] == "image":
 
             media_group = [telebot.types.InputMediaPhoto(image, escaped_response) for image in images]
