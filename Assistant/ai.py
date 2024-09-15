@@ -33,6 +33,7 @@ class llm:
         self.imgs = []
         self.random_imgs = []
         self.bot = bot
+        self.user_id = user_id
         self.current_property_id = database.get_current_property(user_id)
         self.property_data = database.get_property_data(self.current_property_id)
         self.function_descriptions = self.property_data.get("function_description",None)
@@ -208,7 +209,7 @@ class llm:
                 "stopSequences": [],
                 #'safety_settings': [{"category":"HARM_CATEGORY_DEROGATORY","threshold":4},{"category":"HARM_CATEGORY_TOXICITY","threshold":4},{"category":"HARM_CATEGORY_VIOLENCE","threshold":4},{"category":"HARM_CATEGORY_SEXUAL","threshold":4},{"category":"HARM_CATEGORY_MEDICAL","threshold":4},{"category":"HARM_CATEGORY_DANGEROUS","threshold":4}]
               },}
-        
+       
         while True:
             try:
                 print("Executing request...")
@@ -289,7 +290,7 @@ class llm:
         if messages[-1]["role"] == "function":
             print(messages[-1]["role"])
             print("function call!!")
-            self.generate_response(_id,messages)
+            self.generate_response(self.user_id,messages)
         print(self.messages_to_send)
         return self.messages_to_send
         #return response_data["candidates"][0]["content"]["parts"][0]["text"]
