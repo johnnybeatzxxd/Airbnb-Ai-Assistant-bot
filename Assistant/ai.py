@@ -169,7 +169,7 @@ class llm:
                 return {"function_response":'image not found with this argument please use one of them [outdoor, house, bedroom, bathroom]. If it doesn\'t match you can just pass.',"image":None}
 
     def generate_response(self,_id,messages,required_user_info:{},):
-    
+        print("geno")
         data = {
                 "contents": messages,
                 "system_instruction": {
@@ -286,11 +286,10 @@ class llm:
                 messages.append({"role": "function",
                                 "parts": functionResponse
                                     })
-                print(messages)
+              
         if messages[-1]["role"] == "function":
-            print(messages[-1]["role"])
             print("function call!!")
-            self.generate_response(self.user_id,messages)
+            return self.generate_response(self.user_id,messages)
         print(self.messages_to_send)
         return self.messages_to_send
         #return response_data["candidates"][0]["content"]["parts"][0]["text"]
