@@ -284,8 +284,11 @@ class llm:
                                 },)
                 messages.append({"role": "function",
                                 "parts": functionResponse
-                                    }) 
+                                    })
+                print(messages)
         if messages[-1]["role"] == "function":
+            print(messages[-1]["role"])
+            print("function call!!")
             self.generate_response(_id,messages)
         print(self.messages_to_send)
         return self.messages_to_send
