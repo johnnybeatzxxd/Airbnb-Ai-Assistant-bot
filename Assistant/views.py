@@ -55,10 +55,8 @@ def send_messages(_id:int,messages:list,):
         print("sending the messages")
         text = message["response"]
         images = message["response_image"]
-        print(f"text:{text}")
-        print(f"images:{images}")
         escaped_response = markdown.markdown(text)
-        print(escaped_response)
+        
         response = [
                     {"text": text},  
                 ] 

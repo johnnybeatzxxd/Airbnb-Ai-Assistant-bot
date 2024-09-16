@@ -287,7 +287,7 @@ class llm:
                                 "parts": functionResponse
                                     })
                 continue
-        print(messages)
+      
         if messages[-1]["role"] == "function":
             print("function call!!")
             self.generate_response(self.user_id,messages,{})
