@@ -202,13 +202,13 @@ class llm:
             },
         ],
                 "generationConfig": {
-                "temperature": 0.1,
-                "topK": 1,
-                "topP": 1,
-                "maxOutputTokens": 2048,
-                "stopSequences": [],
-                #'safety_settings': [{"category":"HARM_CATEGORY_DEROGATORY","threshold":4},{"category":"HARM_CATEGORY_TOXICITY","threshold":4},{"category":"HARM_CATEGORY_VIOLENCE","threshold":4},{"category":"HARM_CATEGORY_SEXUAL","threshold":4},{"category":"HARM_CATEGORY_MEDICAL","threshold":4},{"category":"HARM_CATEGORY_DANGEROUS","threshold":4}]
-              },}
+                    "temperature": 0.1,
+                    "topK": 1,
+                    "topP": 1,
+                    "maxOutputTokens": 2048,
+                    "stopSequences": [],
+                    #'safety_settings': [{"category":"HARM_CATEGORY_DEROGATORY","threshold":4},{"category":"HARM_CATEGORY_TOXICITY","threshold":4},{"category":"HARM_CATEGORY_VIOLENCE","threshold":4},{"category":"HARM_CATEGORY_SEXUAL","threshold":4},{"category":"HARM_CATEGORY_MEDICAL","threshold":4},{"category":"HARM_CATEGORY_DANGEROUS","threshold":4}]
+                },}
        
         while True:
             try:
@@ -289,7 +289,7 @@ class llm:
               
         if messages[-1]["role"] == "function":
             print("function call!!")
-            return self.generate_response(self.user_id,messages)
+            self.generate_response(self.user_id,messages,{})
         print(self.messages_to_send)
         return self.messages_to_send
         #return response_data["candidates"][0]["content"]["parts"][0]["text"]
