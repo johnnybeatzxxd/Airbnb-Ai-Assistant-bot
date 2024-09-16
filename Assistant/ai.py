@@ -78,9 +78,9 @@ class llm:
         random_numbers = pick_random_numbers(list_of_numbers, number_of_numbers_to_pick)
         return random_numbers
     
-    def function_call(self,response,_id):
+    def function_call(self,function_call,_id):
         
-        function_call = response["candidates"][0]["content"]["parts"][0]["functionCall"]
+        
         function_name = function_call["name"]
         function_args = function_call["args"]
         print(type(function_args))
@@ -244,7 +244,7 @@ class llm:
                 function_call = part["functionCall"]
                 function_name = function_call["name"]
                 print(function_name)
-                function_response = self.function_call(response_data,_id)
+                function_response = self.function_call(function_call,_id)
                 function_response_message = function_response["function_response"]
                 function_response_image = function_response.get("image",None)
                 print(function_response_message)
