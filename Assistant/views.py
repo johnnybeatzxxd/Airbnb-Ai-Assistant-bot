@@ -68,11 +68,13 @@ def send_messages(_id:int,messages:list,):
             print(escaped_response)
             bot.send_message(_id,escaped_response,reply_markup=markups(),parse_mode='HTML')
         if message["response_type"] == "image":
-
-            media_group = [telebot.types.InputMediaPhoto(image, escaped_response) for image in images]
-
-            #bot.send_media_group(id_, media_group)
             escaped_response = remove_unsupported_tags(escaped_response)
+            if len(images) > 1:
+                print("its multi photos")
+                media_group = [telebot.types.InputMediaPhoto(image, escaped_response,parse_mode='HTML') for image in images]
+                bot.send_media_group(_id, media_group)
+                continue
+            
             bot.send_photo(_id, images[0], caption=escaped_response, parse_mode='HTML')
             
 
